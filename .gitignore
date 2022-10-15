@@ -132,5 +132,6 @@ dmypy.json
 
 # original
 
-processing_data/
-estimated/
+notebook/
+estimater/maml/model
+estimater/yolov5/exp21_best.pt

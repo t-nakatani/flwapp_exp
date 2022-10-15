@@ -11,8 +11,6 @@
     <title>Flower App</title>
   </head>
   <body>
-    {% block header %}
-    {% endblock header %}
     <nav class="navbar navbar-expand flex-md-row navbar-dark bg-dark">
       <div class="container justify-content-between">
         <a href="{% url 'home' %}" class="navbar-brand">HOME</a>
@@ -26,6 +24,9 @@
       </ul>
       </div>
     </nav>
+    {% block header %}
+    {% endblock header %}
+
     {% block content %}
     {% endblock content %}
   </body>
