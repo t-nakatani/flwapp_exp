@@ -38,6 +38,6 @@ def progress(request, user_id):
     percentage_completed = f'{request.user.next_img_id * 5}%'
     context = {
         'percentage_completed': percentage_completed, 
-        'next_img_id': request.user.next_img_id
+        'user': request.user
     }
     return render(request, 'progress.html', context)

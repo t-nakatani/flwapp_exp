@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block header %}
+{% for message in messages %}
+<div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+    {{ message }}
+</div>
+{% endfor %}
+
+<div class="alert alert-primary" role="alert">
+   <h3> 重なり点の修正</h3>
+   {% if first_estimation %}
+   <p>修正が必要な場合は[修正 or 確認]を，必要ない場合は[修正せずに次へ]を押してください</p>
+   {% else %}
+   {% endif %}
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container">
+    <div class="alert alert-success d-flex justify-content-evenly" role="alert">
+		{% if first_estimation %}
+			<p>
+				<img src='{{ path_img }}' width='{{ width }}' height='{{ height }}'>
+				<span class="text-center d-block">入力画像</span>
+			</p>
+			<p>
+				<img src='{{ path_img_corner }}' width='{{ width }}' height='{{ height }}'>
+				<span class="text-center d-block">推定された重なり位置</span>
+			</p>
+		{% else %}
+		<!-- https://teratail.com/questions/145532 -->
+		<p>
+			<img src='{{ path_img }}' width='{{ width }}' height='{{ height }}'>
+			<span class="text-center d-block">入力画像</span>
+		</p>
+		<p>
+			<img src='{{ path_img_corner_old }}' width='{{ width }}' height='{{ height }}'>
+			<span class="text-center d-block">修正前</span>
+		</p>
+		<p>
+			<img src='{{ path_img_corner }}' width='{{ width }}' height='{{ height }}'>
+			<span class="text-center d-block">修正後</span>
+		</p>
+		{% endif %} 
+    </div>
+
+	<div class="alert d-flex justify-content-end">
+		<form method="post">
+			{% csrf_token %}
+			{{ form }}
+			{% if first_estimation %}
+			<input type="hidden" name="coord_list" id="coord_list">
+			<!-- <input type="submit" name="submit_btn" value="修正して確認" class="btn btn-primary" tabindex="-1" aria-disabled="true"> -->
+			<a class="btn btn-primary" data-toggle="modal" data-target="#fix_corner_modal">修正 or 拡大して確認</a>
+			<a class="btn btn-primary" href="#" role="button">修正せずに次へ</a>
+			{% else %}
+			<a class="btn btn-primary" href="{% url 'display_corner' %}" role="button">修正をやり直す</a>
+			<a class="btn btn-primary" href="#" role="button">次へ</a>
+			{% endif %}
+			<!-- モーダルボタン(https://www.sejuku.net/blog/78105) -->
+			<a class="btn btn-outline-danger" data-toggle="modal" data-target="#bug_report_modal">不具合の報告</a>
+			<!-- 修正用のモーダル -->
+			<div class="modal fade" id="fix_corner_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="myModalLabel">花弁の重なりを全てクリックしてください</h4>
+						</div>
+						<div class="modal-body">
+							<div class="container-fluid">
+								<canvas id="canvas_img"  class="img-fluid d-block mx-auto"></canvas>
+								<script>
+									let canvas = document.getElementById('canvas_img');
+									canvas.width = {{ width }}*2;
+									canvas.height = {{ height }}*2;
+									let context = canvas.getContext('2d');
+
+									var img = new Image();
+									img.src = '{{ path_img }}';
+									img.onload = function(){
+									context.drawImage(img, 0, 0, {{ width }}*2, {{ height }}*2);
+									}
+
+									// クリック座標取得&円の描画
+									var xy_coord_list = [];
+									function listen_click(){
+										let canvas = document.getElementById('canvas_img');
+										let context = canvas.getContext('2d');
+										var w = canvas.width;
+										var h = canvas.height;
+										var x = 0;
+										var y = 0;
+										function onClick(e){
+										/*
+										* rectでcanvasの絶対座標位置を取得し、
+										* クリック座標であるe.clientX,e.clientYからその分を引く
+										* ※クリック座標はdocumentからの位置を返すため
+										* ※rectはスクロール量によって値が変わるので、onClick()内でつど定義
+										*/
+										var rect = e.target.getBoundingClientRect();
+										x = e.clientX - rect.left;
+										y = e.clientY - rect.top;
+										x_int = Math.round(x);
+										y_int = Math.round(y);
+										xy_coord_list.push(x_int, y_int);
+										document.getElementById('coord_list').value = xy_coord_list;
+
+										draw();
+										}
+
+										function draw(){
+											context.beginPath();
+											context.arc(x-2, y-2, 4, 0, Math.PI * 2, true);
+											context.fillStyle = "lightskyblue";
+											context.fill();
+											context.strokeStyle = 'lightskyblue';
+											context.lineWidth = 1;
+											context.stroke();
+											context.globalCompositeOperation = 'source-over';
+										}
+										canvas.addEventListener('click', onClick, false);
+									}
+									listen_click();
+								</script>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<a class="btn btn-outline-secondary" role="button" data-dismiss="modal">戻る</a>
+							<input type="submit" class="btn btn-primary" value="修正"  class="btn btn-outline-secondary  " tabindex="-1" role="button" aria-disabled="true">
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- モーダルボタンをクリックした後に表示される画面の内容(bug-report) -->
+	<div class="modal fade" id="bug_report_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="myModalLabel">不具合を報告します</h4>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-outline-secondary" role="button" data-dismiss="modal">戻る</button>
+					<a class="btn btn-outline-danger" href="{% url 'home' %}?bug-report" role="button">報告</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</div>
+{% endblock content %}

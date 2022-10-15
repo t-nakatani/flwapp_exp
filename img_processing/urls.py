@@ -1,5 +1,5 @@
 from django.urls import path
-from img_processing.views import basic, exp
+from img_processing.views import basic, exp, display_img
 
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
     path('', basic.home, name='home'),
     path('note/', basic.note, name='note'),
 
-    path('progress/<int:user_id>', basic.progress, name='progress'),
+    path('progress/<int:user_id>/', basic.progress, name='progress'),
+    path('img_corner/<int:user_id>/', display_img.corner, name='img_corner'),
 
 ]
