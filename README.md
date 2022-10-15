@@ -1,2 +1,2 @@
-# flwapp_for_exp
+# flwapp_exp
 評価実験用のapp

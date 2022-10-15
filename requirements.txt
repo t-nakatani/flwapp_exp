@@ -1,0 +1,17 @@
+# pip install -r requirements.txt
+
+numpy>=1.18.5
+pandas>=1.1.4
+opencv-python>=4.1.2
+Pillow>=7.1.2
+PyYAML>=5.3.1
+requests>=2.23.0
+scipy>=1.4.1
+torch==1.9.0
+torchvision==0.10.0
+tqdm>=4.41.0
+python-Levenshtein
+django
+django_bootstrap5
+django-extensions
+gunicorn
