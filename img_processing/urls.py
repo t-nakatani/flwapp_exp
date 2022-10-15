@@ -7,4 +7,7 @@ urlpatterns = [
 
     path('', basic.home, name='home'),
     path('note/', basic.note, name='note'),
+
+    path('progress/<int:user_id>', basic.progress, name='progress'),
+
 ]
