@@ -52,6 +52,3 @@ def corner(request, user_id):
         }
         # return redirect(display_img_lr, user_id=user_id)
         return redirect('home')
-
-    
-
