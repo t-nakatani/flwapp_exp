@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-import shutil, os
+import shutil
+import os
 
 def save_result():
     """推定結果を保存する"""
@@ -23,6 +24,3 @@ def home(request):
 def note(request):
     """実験注意書きページ"""
     return render(request, 'note.html', {'user_id': request.user.id})
-
-
-

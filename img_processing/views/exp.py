@@ -2,8 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 
-
-
 from img_processing.models import ImageProcessing
 
 
