@@ -14,6 +14,9 @@
 {% endif %}
 
 {% block content %}
-<a href="{% url 'note' %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
+<div class="d-grid gap-2 col-5 mx-auto mt-2">
+    <a href="{% url 'note' %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
+</div>
+
 <!-- <a href="https://drive.google.com/drive/folders/1Y0DMwsQVRCSYTmfHAKzo9uoloa1_2qBI?usp=sharing" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">download sample image</a> -->
 {% endblock content %}
