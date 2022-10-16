@@ -20,7 +20,7 @@ def corner(request, user_id):
 
     if request.method == 'GET':
         context = {
-        'first_estimation': True,
+        'before_modification': True,
         'path_img': f'/media/processing_data/user_{user.id}/img.png', 
         'path_img_corner': f'/media/processing_data/user_{user.id}/img_corner_.png', 
         'height': IMG_HEIGHT, 
@@ -39,7 +39,7 @@ def corner(request, user_id):
         
         estimate.re_infer_with_clicked(f'media/processing_data/user_{user.id}/img.png', clicked_coord)
         context = {
-            'first_estimation': False,
+            'before_modification': False,
             'path_img': f'/media/processing_data/user_{user.id}/img.png', 
             'path_img_corner': f'/media/processing_data/user_{user.id}/img_corner_.png', 
             'path_img_corner_old': f'/media/processing_data/user_{user.id}/img_corner_old.png', 
@@ -61,7 +61,7 @@ def lr(request, user_id):
     if request.method == 'GET':
 
         context = {
-        'first_estimation': True,
+        'before_modification': True,
         'path_img' : f'/media/processing_data/user_{user.id}/img.png', 
         'path_img_lr' : f'/media/processing_data/user_{user.id}/img_lr.png', 
         'height' : IMG_HEIGHT, 
@@ -80,7 +80,7 @@ def lr(request, user_id):
         
         estimate.update_intersection_label(f'media/processing_data/user_{user.id}/img.png', clicked_coord)
         context = {
-        'first_estimation': False,
+        'before_modification': False,
         'path_img' : f'/media/processing_data/user_{user.id}/img.png', 
         'path_img_lr' : f'/media/processing_data/user_{user.id}/img_lr.png', 
         'path_img_lr_old' : f'/media/processing_data/user_{user.id}/img_lr_old.png', 
