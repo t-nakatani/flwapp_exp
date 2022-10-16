@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 
+
+
 from img_processing.models import ImageProcessing
 
 
@@ -29,11 +31,12 @@ def progress(request, user_id):
 
     if request.method == 'GET':
         percentage_completed = f'{request.user.next_img_id * 5}%'
-        context = {'percentage_completed': percentage_completed, 
+        context = {'percentage_completed': percentage_completed,
                    'user': request.user}
         return render(request, 'progress.html', context)
-    
+
     if request.method == 'POST':
         processing = ImageProcessing.objects.create(user=user, img_id=user.next_img_id)
         processing.save()
+
         return redirect('img_corner', user_id)

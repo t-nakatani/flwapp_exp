@@ -11,5 +11,5 @@ urlpatterns = [
     path('progress/<int:user_id>/', exp.progress, name='progress'),
     path('img_corner/<int:user_id>/', display_img.corner, name='img_corner'),
     path('img_lr/<int:user_id>/', display_img.lr, name='img_lr'),
-
+    path('submit/<int:user_id>/', display_img.submit, name='submit'),
 ]
