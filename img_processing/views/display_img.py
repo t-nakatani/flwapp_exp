@@ -3,8 +3,6 @@ from django.http.response import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.conf import settings
-from img_processing.models import ImageProcessing
-
 from estimater import estimate
 import numpy as np
 
@@ -21,9 +19,6 @@ def corner(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        processing = ImageProcessing.objects.create(user=user, img_id=user.next_img_id)
-        processing.save()
-
         context = {
         'first_estimation': True,
         'path_img' : f'/media/estimated/{user.next_img_id}/img.png', 
@@ -31,8 +26,8 @@ def corner(request, user_id):
         'height' : IMG_HEIGHT, 
         'width' : IMG_WIDTH, 
         }
-        print(context)
         return render(request, 'img_corner.html', context)
+
     if request.method == 'POST':
         clicked_coord = (request.POST.get('coord_list', None)).split(',')
         if clicked_coord[0] == '': # clickなしにPOSTが起こった場合．https://office54.net/python/django/display-message-framework
@@ -50,5 +45,4 @@ def corner(request, user_id):
             'height' : IMG_HEIGHT, 
             'width' : IMG_WIDTH, 
         }
-        # return redirect(display_img_lr, user_id=user_id)
         return redirect('home')

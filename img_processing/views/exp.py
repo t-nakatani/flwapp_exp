@@ -1,5 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseForbidden
+from django.shortcuts import render, redirect
+
+from img_processing.models import ImageProcessing
+
 
 @login_required
 def register_img(request):
@@ -7,19 +11,29 @@ def register_img(request):
 
     if request.method == 'POST':
         pass
-        # form = ApplicationForm(request.POST)
-        # if form.is_valid():
-        #     applicaion = form.save(commit=False)
-        #     applicaion.worker = request.user
-        #     applicaion.work = get_object_or_404(Work, pk=work_id)
-        #     applicaion.save()
-        #     return redirect('home')
+
     else:
         if request.user.id == 1:
             return HttpResponse('user==nakatani OK')
-        # work = get_object_or_404(Work, pk=work_id)
-        # if Application.objects.filter(work=work, worker=request.user).exists:
-        #     return render(request, 'work/apply.html')
-        # form = ApplicationForm()
-        # return render(request, 'work/apply.html', {'form': form})
 
+
+@login_required
+def progress(request, user_id):
+    """
+    GET: 進捗確認
+    POST: ImageProcessingレコードの作成
+    """
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        percentage_completed = f'{request.user.next_img_id * 5}%'
+        context = {'percentage_completed': percentage_completed, 
+                   'user': request.user}
+        return render(request, 'progress.html', context)
+    
+    if request.method == 'POST':
+        processing = ImageProcessing.objects.create(user=user, img_id=user.next_img_id)
+        processing.save()
+        return redirect('img_corner', user_id)

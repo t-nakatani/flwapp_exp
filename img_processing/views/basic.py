@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http.response import HttpResponseForbidden
 import shutil, os
 
 def save_result():
@@ -26,18 +25,4 @@ def note(request):
     return render(request, 'note.html', {'user_id': request.user.id})
 
 
-@login_required
-def progress(request, user_id):
-    """
-    進捗確認ページ
-    裏でset_next_img()を呼び出す
-    """
-    if request.user.id != user_id:
-        return HttpResponseForbidden('You cannot access this page')
 
-    percentage_completed = f'{request.user.next_img_id * 5}%'
-    context = {
-        'percentage_completed': percentage_completed, 
-        'user': request.user
-    }
-    return render(request, 'progress.html', context)
