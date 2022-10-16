@@ -6,7 +6,7 @@
     {{ message }}
 </div>
 {% endfor %}
-<div class="alert alert-primary" role="alert">
+<div class="alert alert-dark" role="alert">
    <h3> 推定結果 </h3>
    {% if before_modification %}
    <p>修正が必要な場合は[修正 or 確認]を，必要ない場合は[修正せずに次へ]を押してください</p>
@@ -17,7 +17,7 @@
 
 {% block content %}
 <div class="container">
-    <div class="alert alert-success d-flex justify-content-evenly" role="alert">
+    <div class="alert alert-dark d-flex justify-content-evenly" role="alert">
 		{% if before_modification %}
 			<p>
 				<img src='{{ path_img }}' width='{{ width }}' height='{{ height }}'>

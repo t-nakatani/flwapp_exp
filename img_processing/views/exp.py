@@ -2,8 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 
-
-
 from img_processing.models import ImageProcessing
 
 
@@ -36,7 +34,7 @@ def progress(request, user_id):
         return render(request, 'progress.html', context)
 
     if request.method == 'POST':
-        processing = ImageProcessing.objects.create(user=user, img_id=user.next_img_id)
+        processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
         processing.save()
 
         return redirect('img_corner', user_id)
