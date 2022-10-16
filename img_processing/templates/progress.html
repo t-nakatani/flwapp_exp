@@ -1,5 +1,6 @@
 
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 <div class="progress">
@@ -9,8 +10,11 @@
     <h2>{{ user.next_img_id }} out of a total of 20 images have been completed</h3>
 </div>
 
-<div class="d-grid gap-2 col-5 mx-auto mt-2">
-    <a href="{% url 'img_corner' user.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">next image</a>
-</div>
+<form action="{% url 'progress' user.id %}" method="post">
+    {% csrf_token %}
+    <div class="d-grid gap-2 col-5 mx-auto mt-2">
+        <button type="submit" class="submit btn btn-primary">next image</button>
+    </div>
+</form>
 {% endblock content %}
 
