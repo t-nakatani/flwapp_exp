@@ -9,7 +9,7 @@
 
 <div class="alert alert-primary" role="alert">
    <h3> 重なり点の修正</h3>
-   {% if first_estimation %}
+   {% if before_modification %}
    <p>修正が必要な場合は[修正 or 確認]を，必要ない場合は[修正せずに次へ]を押してください</p>
    {% else %}
    {% endif %}
@@ -19,7 +19,7 @@
 {% block content %}
 <div class="container">
     <div class="alert alert-success d-flex justify-content-evenly" role="alert">
-		{% if first_estimation %}
+		{% if before_modification %}
 			<p>
 				<img src='{{ path_img }}' width='{{ width }}' height='{{ height }}'>
 				<span class="text-center d-block">入力画像</span>
@@ -49,14 +49,14 @@
 		<form method="post">
 			{% csrf_token %}
 			{{ form }}
-			{% if first_estimation %}
+			{% if before_modification %}
 			<input type="hidden" name="coord_list" id="coord_list">
 			<!-- <input type="submit" name="submit_btn" value="修正して確認" class="btn btn-primary" tabindex="-1" aria-disabled="true"> -->
 			<a class="btn btn-primary" data-toggle="modal" data-target="#fix_corner_modal">修正 or 拡大して確認</a>
-			<a class="btn btn-primary" href="#" role="button">修正せずに次へ</a>
+			<a class="btn btn-primary" href="{% url 'img_lr' user.id %}" role="button">修正せずに次へ</a>
 			{% else %}
-			<a class="btn btn-primary" href="{% url 'display_corner' %}" role="button">修正をやり直す</a>
-			<a class="btn btn-primary" href="#" role="button">次へ</a>
+			<a class="btn btn-primary" href="{% url 'img_corner' user.id %}" role="button">修正をやり直す</a>
+			<a class="btn btn-primary" href="{% url 'img_lr' user.id %}" role="button">次へ</a>
 			{% endif %}
 			<!-- モーダルボタン(https://www.sejuku.net/blog/78105) -->
 			<a class="btn btn-outline-danger" data-toggle="modal" data-target="#bug_report_modal">不具合の報告</a>
