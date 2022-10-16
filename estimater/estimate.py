@@ -309,7 +309,7 @@ def petal_array(dic_, df_):
     cxcy=  (int(sum(df_['cx']) / len(df_['cx'])), int(sum(df_['cy']) / len(df_['cy'])))
     coords_ = [(xy[0] - cxcy[0], xy[1] - cxcy[1]) for xy in coords]
     list_ = sorted([[math.degrees(math.atan2(xy[1], xy[0])), pname] for xy, pname in zip(coords_, patchs)])
-    preds = ''.join([dic_[_pnames[1]] for _pnames in list_])
+    preds = ''.join([str(dic_[_pnames[1]]) for _pnames in list_])
     preds = preds.replace('0', 'r').replace('1', 'l')
     preds = preds[::-1] # countour clockwise >> clockwise
 
@@ -585,4 +585,14 @@ def re_infer_with_clicked(path_img, clicked_coord_xy):
     cv2.imwrite(f'{dir}/img_lr.png', img_lr)
     df_n.to_csv(f'{dir}/df_n.csv', index=False)
 
-    return
+    return 
+
+def get_predict_from_csv(path_csv):
+    df = pd.read_csv(path_csv)
+    dic = dict(zip(df['patch_name'], df['label']))
+    arr_lr = petal_array(dic, df)
+    cost = {'replace':1, 'delete':1, 'insert':1}
+    path_flw_dic = 'media/saved_data/dic_iea.pkl'
+    arr_iea = LR2IEA(arr_lr)
+    types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
+    return types[0]
