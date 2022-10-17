@@ -326,8 +326,8 @@ def petal_array(dic_, df_):
     return preds
 
 def create_img_lr(img_lr, df):
-    R = cv2.imread('media/saved_data/R.png')
-    L = cv2.imread('media/saved_data/L.png')
+    R = cv2.imread('media/util_data/R.png')
+    L = cv2.imread('media/util_data/L.png')
     pnames = list(df['patch_name'])
     cx_list = list(df['cx'])
     cy_list = list(df['cy'])
@@ -526,7 +526,7 @@ def infer_arr(path_img):
     img_lr = np.copy(img)
     img_lr = create_img_lr(img_lr, df_n)
     cost = {'replace': 1, 'delete': 1, 'insert': 1}
-    path_flw_dic = 'media/saved_data/dic_iea.pkl'
+    path_flw_dic = 'media/util_data/dic_iea.pkl'
     arr_iea = LR2IEA(arr_lr)
     types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
     ARR = arr_iea.upper()
@@ -589,7 +589,7 @@ def re_infer_with_clicked(path_img, clicked_coord_xy):
     img_corner = create_img_corner(img_corner, df_n)
     img_lr = create_img_lr(img_lr, df_n)
     cost = {'replace': 1, 'delete': 1, 'insert': 1}
-    path_flw_dic = 'media/saved_data/dic_iea.pkl'
+    path_flw_dic = 'media/util_data/dic_iea.pkl'
     arr_iea = LR2IEA(arr_lr)
     types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
     ARR = arr_iea.upper()
@@ -606,7 +606,7 @@ def get_predict_from_csv(path_csv):
     dic = dict(zip(df['patch_name'], df['label']))
     arr_lr = petal_array(dic, df)
     cost = {'replace': 1, 'delete': 1, 'insert': 1}
-    path_flw_dic = 'media/saved_data/dic_iea.pkl'
+    path_flw_dic = 'media/util_data/dic_iea.pkl'
     arr_iea = LR2IEA(arr_lr)
     types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
     return types[0]

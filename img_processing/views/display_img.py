@@ -6,6 +6,8 @@ from estimater import estimate
 from django.db import transaction
 from img_processing.models import ImageProcessing
 import numpy as np
+import shutil
+import os
 
 SIZE_RATIO = 2.5
 IMG_WIDTH = 400
@@ -107,6 +109,10 @@ def submit(request, user_id):
             processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
             processing.predict = predict
             processing.save()
+            shutil.move(
+                f'media/processing_data/user_{user.id}',
+                f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
+            )
             user.next_img_id += 1
             user.save()
 

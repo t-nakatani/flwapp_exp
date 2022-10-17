@@ -15,3 +15,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 RUN apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0
 
 WORKDIR /work
+RUN mkdir -p /var/run/gunicorn
+
+
+CMD ["gunicorn", "flwapp.wsgi", "--bind=unix:/var/run/gunicorn/gunicorn.sock"]
