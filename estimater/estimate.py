@@ -531,7 +531,7 @@ def estimate_arr(path_img):
 
     cv2.imwrite(f'{dir}/img_bb.png', img_bb)
     cv2.imwrite(f'{dir}/img_fore.png', foreground)
-    cv2.imwrite(f'{dir}/img_corner_.png', img_corner)
+    cv2.imwrite(f'{dir}/img_corner.png', img_corner)
     cv2.imwrite(f'{dir}/img_lr.png', img_lr)
     df_n.to_csv(f'{dir}/df_n.csv', index=False)
     # print(type(bb), type(contour4mask), type(contour4mask[0]), type(contour4mask[0][0]))
@@ -589,8 +589,8 @@ def re_infer_with_clicked(path_img, clicked_coord_xy):
     types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
     ARR = arr_iea.upper()
 
-    shutil.move(f'{dir}/img_corner_.png', f'{dir}/img_corner_old.png')
-    cv2.imwrite(f'{dir}/img_corner_.png', img_corner)
+    shutil.move(f'{dir}/img_corner.png', f'{dir}/img_corner_old.png')
+    cv2.imwrite(f'{dir}/img_corner.png', img_corner)
     cv2.imwrite(f'{dir}/img_lr.png', img_lr)
     df_n.to_csv(f'{dir}/df_n.csv', index=False)
 
