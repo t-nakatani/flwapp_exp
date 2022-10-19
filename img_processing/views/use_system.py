@@ -7,12 +7,28 @@ from django.db import transaction
 from img_processing.models import ImageProcessing
 import numpy as np
 import shutil
+import string
+import random
 import os
 
 SIZE_RATIO = 2.5
 IMG_WIDTH = 400
 IMG_HEIGHT = 265
 
+def cache_busting(path_img, n=4, start_with_slash=True):
+    """ブラウザのキャッシュによって画像が更新されないことを防ぐためのcache busting"""
+    dir_, fname = os.path.split(path_img)
+    if start_with_slash:
+        dir_ = dir_[1:]
+        path_img = path_img[1:]
+    fname, ftype = fname.split('.')
+    randlst = [random.choice(string.ascii_letters + string.digits) for i in range(n)]
+    rand_string = ''.join(randlst)
+    new_path = f'{dir_}/{fname}_{rand_string}.{ftype}'
+    shutil.copy(path_img, new_path)
+    if start_with_slash:
+        new_path = '/' + new_path
+    return new_path
 
 @login_required
 def corner(request, user_id):
@@ -24,8 +40,8 @@ def corner(request, user_id):
 
     if request.method == 'GET':
         context = {'before_modification': True,
-                   'path_img': f'/media/processing_data/user_{user.id}/img.png',
-                   'path_img_corner': f'/media/processing_data/user_{user.id}/img_corner_.png',
+                   'path_img': cache_busting(f'/media/processing_data/user_{user.id}/img.png'),
+                   'path_img_corner': cache_busting(f'/media/processing_data/user_{user.id}/img_corner.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': user}
@@ -41,9 +57,9 @@ def corner(request, user_id):
 
         estimate.re_infer_with_clicked(f'media/processing_data/user_{user.id}/img.png', clicked_coord)
         context = {'before_modification': False,
-                   'path_img': f'/media/processing_data/user_{user.id}/img.png',
-                   'path_img_corner': f'/media/processing_data/user_{user.id}/img_corner_.png',
-                   'path_img_corner_old': f'/media/processing_data/user_{user.id}/img_corner_old.png',
+                   'path_img': cache_busting(f'/media/processing_data/user_{user.id}/img.png'),
+                   'path_img_corner': cache_busting(f'/media/processing_data/user_{user.id}/img_corner.png'),
+                   'path_img_corner_old': cache_busting(f'/media/processing_data/user_{user.id}/img_corner_old.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': user}
@@ -60,8 +76,8 @@ def lr(request, user_id):
 
     if request.method == 'GET':
         context = {'before_modification': True,
-                   'path_img': f'/media/processing_data/user_{user.id}/img.png',
-                   'path_img_lr': f'/media/processing_data/user_{user.id}/img_lr.png',
+                   'path_img': cache_busting(f'/media/processing_data/user_{user.id}/img.png'),
+                   'path_img_lr': cache_busting(f'/media/processing_data/user_{user.id}/img_lr.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': user}
@@ -78,9 +94,9 @@ def lr(request, user_id):
 
         estimate.update_intersection_label(f'media/processing_data/user_{user.id}/img.png', clicked_coord)
         context = {'before_modification': False,
-                   'path_img': f'/media/processing_data/user_{user.id}/img.png',
-                   'path_img_lr': f'/media/processing_data/user_{user.id}/img_lr.png',
-                   'path_img_lr_old': f'/media/processing_data/user_{user.id}/img_lr_old.png',
+                   'path_img': cache_busting(f'/media/processing_data/user_{user.id}/img.png'),
+                   'path_img_lr': cache_busting(f'/media/processing_data/user_{user.id}/img_lr.png'),
+                   'path_img_lr_old': cache_busting(f'/media/processing_data/user_{user.id}/img_lr_old.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': user}
@@ -98,7 +114,7 @@ def submit(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        context = {'path_img_lr': f'/media/processing_data/user_{user.id}/img_lr.png',
+        context = {'path_img_lr': cache_busting(f'/media/processing_data/user_{user.id}/img_lr.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': request.user}
