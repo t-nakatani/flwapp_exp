@@ -14,6 +14,7 @@ from img_processing.models import ImageProcessing
 
 
 class register_img(CreateView):
+    """実験の前準備として初回の花弁配置値の推定を完了して保存するためのクラス"""
     template_name = 'img_upload.html'
     model = Image
     fields = ('img_id', 'img')
