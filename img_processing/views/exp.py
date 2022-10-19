@@ -45,7 +45,8 @@ def progress(request, user_id):
 
     if request.method == 'POST':
         if user.use_system:
-            shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
+            if not os.path.exists(f'media/processing_data/user_{user.id}'):
+                shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
         processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
         processing.save()
 
