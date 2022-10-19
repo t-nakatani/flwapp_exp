@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="alert alert-dark" role="alert">
+   <h3> 画像に写った花の花弁配置を選択してください </h3>
+   {% if before_modification %}
+   <p>修正が必要な場合は[修正 or 確認]を，必要ない場合は[修正せずに次へ]を押してください</p>
+   {% else %}
+   {% endif %}
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid">
+      <img src='{{ path_img }}' width='{{ width }}' height='{{ height }}' class="img-fluid d-block mx-auto">
+</div>
+{% endblock content %}

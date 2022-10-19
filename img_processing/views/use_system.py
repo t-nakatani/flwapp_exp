@@ -13,6 +13,7 @@ SIZE_RATIO = 2.5
 IMG_WIDTH = 400
 IMG_HEIGHT = 265
 
+
 @login_required
 def corner(request, user_id):
     """花弁の重なり検出の結果を表示する機能"""
@@ -101,7 +102,7 @@ def submit(request, user_id):
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
                    'user': request.user}
-        return render(request, 'submit.html', context)
+        return render(request, 'use_system_submit.html', context)
 
     if request.method == 'POST':
         predict = estimate.get_predict_from_csv(f'media/processing_data/user_{user.id}/df_n.csv')

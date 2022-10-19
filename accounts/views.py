@@ -15,5 +15,7 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        user.use_system = user.id % 2
+        user.save()
         login(self.request, user)
         return redirect('login')
