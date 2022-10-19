@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block header %}
+<h3>画像のアップロード</h3>
+{% endblock header %}
+
+{% block content %}
+<div class="container ">
+    <form action="" method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %}
+        {% for item in form %}
+        <div class="form-group">
+            <label for="{{item.id_for_label}}">{{item.label}}</label>
+            <input
+                type="{{item.field.widget.input_type}}"
+                class="form-control"
+                {% if item.field.required %}required{% endif %}
+                name="{{item.name}}"
+                id="{{item.id_for_label}}">
+        </div>
+        {% endfor %}
+        
+        <div class="d-grid gap-2 col-6 mx-auto mt-2">
+            <button type="submit" class="submit btn btn-outline-primary">upload</button>
+        </div>
+    </form>
+    <div class="d-grid gap-2 col-6 mx-auto mt-2">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary  " tabindex="-1" role="button" aria-disabled="true">HOME</a>
+    </div>
+</div>
+{% endblock content %}

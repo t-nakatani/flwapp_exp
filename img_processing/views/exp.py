@@ -1,21 +1,29 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
+from img_processing.models import Image
+from django.views.generic import CreateView
+from django.contrib import messages
+
+from estimater import estimate
 import shutil
+import os
 
 from img_processing.models import ImageProcessing
 
 
-@login_required
-def register_img(request):
-    """実験の前準備として初回の花弁配置値の推定を完了して保存するための機能"""
+class register_img(CreateView):
+    template_name = 'img_upload.html'
+    model = Image
+    fields = ('img_id', 'img')
 
-    if request.method == 'POST':
-        pass
-
-    else:
-        if request.user.id == 1:
-            return HttpResponse('user==nakatani OK')
+    def get_success_url(self):
+        img = Image.objects.order_by('id').last()
+        os.mkdir(f'media/estimated/{img.img_id}')
+        shutil.move(f'media/{img.img}', f'media/estimated/{img.img_id}/img.png')
+        estimate.estimate_arr(f'media/estimated/{img.img_id}/img.png')
+        return '/register_img'
 
 
 @login_required

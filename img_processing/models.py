@@ -1,7 +1,14 @@
+from distutils.command.upload import upload
 from django.db import models
 from accounts.models import User
 
 # Create your models here.
+class Image(models.Model):
+    """画像のアップロードに用いるクラス"""
+    img_id = models.CharField(max_length=2)
+    img = models.ImageField(upload_to='estimated/upload/')
+
+
 class ImageProcessing(models.Model):
     """
     ユーザが各画像を処理した際の記録を担うクラス

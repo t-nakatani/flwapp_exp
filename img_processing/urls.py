@@ -3,7 +3,7 @@ from img_processing.views import basic, exp, display_img
 
 
 urlpatterns = [
-    path('register_img/', exp.register_img, name='register_img'),
+    path('register_img/', exp.register_img.as_view(), name='register_img'),
 
     path('', basic.home, name='home'),
     path('note/', basic.note, name='note'),

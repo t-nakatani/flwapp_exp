@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'gunicorn-django']
+ALLOWED_HOSTS = ['localhost', 'gunicorn-django']
 CSRF_TRUSTED_ORIGINS = ['https://flwapp.imlab.jp']
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'django_bootstrap5',
     'django_extensions',
+    'django_static_md5url',
 ]
 
 MIDDLEWARE = [
