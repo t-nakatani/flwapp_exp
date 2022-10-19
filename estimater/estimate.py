@@ -18,12 +18,11 @@ sys.path.append('estimater/maml')
 from estimater.maml.load_model_predict import main
 import argparse
 
-def mk_data_dir():
-    os.mkdir('./data')
-    os.mkdir('./data/patch')
-    os.mkdir('./data/patch/synthe')
-    os.mkdir('./data/patch/for_synthe')
-    os.mkdir('./data/patch/natural')
+def mk_data_dir(dir):
+    os.mkdir(f'{dir}/patch')
+    os.mkdir(f'{dir}/patch/synthe')
+    os.mkdir(f'{dir}/patch/for_synthe')
+    os.mkdir(f'{dir}/patch/natural')
     return
 
 def mk_patch_dir(dir):
@@ -501,13 +500,12 @@ def re_grabcut(old_mask, old_fore):
     new_fore = mask2fore(old_fore, new_mask * 255)
     return new_fore
 
-def infer_arr(path_img):
-    mk_data_dir()
+def estimate_arr(path_img):
     dir, fname = os.path.split(path_img)
+    mk_data_dir(dir)
     path_patch = f'{dir}/patch'
 
     img = cv2.imread(path_img)
-    cv2.imwrite('./data/img.png', img)
     bb_ = detect.run(weights=weight_path, source=path_img, nosave=True, imgsz=(256, 256)).tolist()[0]
     bb = [int(xy) for xy in bb_]
     img_bb = img + 0
@@ -531,11 +529,11 @@ def infer_arr(path_img):
     types, min_ = arr2TYPE(path_flw_dic, arr_iea, cost)
     ARR = arr_iea.upper()
 
-    cv2.imwrite('./data/img_bb.png', img_bb)
-    cv2.imwrite('./data/img_fore.png', foreground)
-    cv2.imwrite('./data/img_corner_.png', img_corner)
-    cv2.imwrite('./data/img_lr.png', img_lr)
-    df_n.to_csv('./data/df_n.csv', index=False)
+    cv2.imwrite(f'{dir}/img_bb.png', img_bb)
+    cv2.imwrite(f'{dir}/img_fore.png', foreground)
+    cv2.imwrite(f'{dir}/img_corner_.png', img_corner)
+    cv2.imwrite(f'{dir}/img_lr.png', img_lr)
+    df_n.to_csv(f'{dir}/df_n.csv', index=False)
     # print(type(bb), type(contour4mask), type(contour4mask[0]), type(contour4mask[0][0]))
     log_result = {
         'fname': os.path.basename(path_img),
@@ -543,9 +541,6 @@ def infer_arr(path_img):
         'contour': list(map(int, np.array(contour4mask).flatten())),
         'arrangement': ARR
     }
-
-    with open("./data/log_result.json", "w") as f:
-        json.dump(log_result, f, indent=4)
     return bb, contour4mask, df_n, ARR
 
 def min_dist_arg(coord, coord_list):
