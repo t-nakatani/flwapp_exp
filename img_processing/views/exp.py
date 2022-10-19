@@ -35,8 +35,12 @@ def progress(request, user_id):
         return render(request, 'progress.html', context)
 
     if request.method == 'POST':
-        shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
+        if user.use_system:
+            shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
         processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
         processing.save()
 
-        return redirect('img_corner', user_id)
+        if user.use_system:
+            return redirect('img_corner', user_id)
+        else:
+            return redirect('select_arrangement', user_id)
