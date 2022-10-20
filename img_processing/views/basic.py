@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from img_processing.models import Questionnaire
 import shutil
 import os
 
@@ -17,6 +18,8 @@ def update_data_dir(user):
 
 def home(request):
     """ホームページ"""
+    if Questionnaire.objects.select_related('user').filter(user=request.user).exists():
+        return render(request, 'home.html', {'finished_exp': True, 'user_id': request.user.id})
     return render(request, 'home.html', {'user_id': request.user.id})
 
 

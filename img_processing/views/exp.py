@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
+from img_processing.forms import QuestionnaireForm
 from img_processing.models import Image
 from django.views.generic import CreateView
 from django.contrib import messages
@@ -54,3 +55,30 @@ def progress(request, user_id):
             return redirect('img_corner', user_id)
         else:
             return redirect('select_arrangement', user_id)
+
+
+@login_required
+def questionnaire(request, user_id):
+    """アンケートフォーム"""
+
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        form = QuestionnaireForm()
+        context = {'form': form, '1to5': [1, 2, 3, 4, 5]}
+        return render(request, 'questionnaire.html', context)
+
+    if request.method == 'POST':
+        form = QuestionnaireForm(request.POST)
+        if form.is_valid():
+            questionnaire = form.save(commit=False)
+            questionnaire.usability = request.POST["radio_options"]
+            questionnaire.user = user
+            try:
+                questionnaire.save()
+            except Exception:
+                messages.add_message(request, messages.ERROR, u"ERROR: 重複してアンケートが送信されました")
+                return redirect('home')
+            return redirect('progress', user_id)
