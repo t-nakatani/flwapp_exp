@@ -8,7 +8,7 @@
 <div class="p-5 w-75 mx-auto">
     <form method="post">
         {% csrf_token %}
-        <p>使いやすさ: 1(悪い)-5(良い)で評価してください</p>
+        <p>使いやすさ: 1(悪い) から 5(良い) で評価してください</p>
         {% for i in 1to5 %}
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="radio_options" id={{ i }} value={{ i }}>
