@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-black text-align:center bg-white p-sm-5">
+    <h3>研究協力承諾書</h3>
+    <ol>
+        <li>私は下記の研究について、文書に基づいて口頭で説明を受け、研究の目的、研究の意義、研究に参加するリスク、研究協力の方法、倫理的配慮について理解しました。</li>
+        <ul>
+            <li>研究テーマ: 花画像から花弁配置を推定するシステムの構築</li>
+            <li>協力内容: 花弁配置推定システムの評価実験</li>
+        </ul>
+        <li>この研究によって得られたデータは厳重に管理されること、個人のプライバシーが守られることの説明を受け、理解しました。</li>
+        <li>研究への参加は強制されるものではなく自由意志に基づくものであり、研究に参加した後でも、いつでも自由に研究への参加を止めることができ、不利益を被ることは一切ないことを理解しました。</li>
+    </ol>
+    <p>研究に協力することを承諾します。</p>
+    
+</div>
+<div class="d-grid gap-2 col-5 mx-auto mt-2">
+    <a href="{% url 'signup' %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">next</a>
+</div>
+<br>
+<br>
+{% endblock content %}
