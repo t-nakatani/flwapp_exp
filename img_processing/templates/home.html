@@ -14,9 +14,15 @@
 {% endif %}
 
 {% block content %}
+{% if user_id %}
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
-    <a href="{% url 'note' %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
+    <a href="{% url 'progress' user_id %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
 </div>
+{% else %}
+<div class="d-grid gap-2 col-5 mx-auto mt-2">
+    <a href="{% url 'login' %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">Login</a>
+</div>
+{% endif %}
 
 <!-- <a href="https://drive.google.com/drive/folders/1Y0DMwsQVRCSYTmfHAKzo9uoloa1_2qBI?usp=sharing" class="btn btn-outline-secondary" tabindex="-1" role="button" aria-disabled="true">download sample image</a> -->
 {% endblock content %}

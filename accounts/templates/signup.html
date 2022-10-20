@@ -2,10 +2,14 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
+{% if request.META.HTTP_REFERER == 'http://localhost:9001/agree/' or request.META.HTTP_REFERER == 'https://flwapp.imlab.jp/agree/' %}
     <h1>User Registration</h1>
     <form action="{% url 'signup' %}" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
     {% bootstrap_button button_type='submit' content='Register' %}
     </form>
+{% else %}
+<h3>研究に協力することを承諾してください</h3>
+{% endif %}
 {% endblock %}

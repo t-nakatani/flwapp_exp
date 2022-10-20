@@ -17,10 +17,14 @@ def update_data_dir(user):
 
 def home(request):
     """ホームページ"""
-    return render(request, 'home.html')
+    return render(request, 'home.html', {'user_id': request.user.id})
 
 
-@login_required
 def note(request):
     """実験注意書きページ"""
-    return render(request, 'note.html', {'user_id': request.user.id})
+    return render(request, 'note.html')
+
+
+def agree(request):
+    """実験同意ページ"""
+    return render(request, 'agree.html')

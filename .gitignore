@@ -136,3 +136,7 @@ notebook/
 estimater/maml/model
 estimater/yolov5/exp21_best.pt
 .env
+
+img_processing/templates/note.html
+
+

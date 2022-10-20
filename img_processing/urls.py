@@ -7,6 +7,7 @@ urlpatterns = [
 
     path('', basic.home, name='home'),
     path('note/', basic.note, name='note'),
+    path('agree/', basic.agree, name='agree'),
 
     path('progress/<int:user_id>/', exp.progress, name='progress'),
     path('select_arrangement/<int:user_id>/', manual.arrangement, name='select_arrangement'),
