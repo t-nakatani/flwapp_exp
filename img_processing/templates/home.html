@@ -14,7 +14,12 @@
 {% endif %}
 
 {% block content %}
-{% if user_id %}
+{% if finished_exp %}
+<div class="text-black text-center bg-white p-3 p-sm-5 rounded">
+    <h2>実験は終了です．ご協力ありがとうございました！</h2>
+
+</div>
+{% elif user_id %}
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
     <a href="{% url 'progress' user_id %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
 </div>
