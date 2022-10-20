@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'django_bootstrap5',
     'django_extensions',
-    'django_static_md5url',
 ]
 
 MIDDLEWARE = [
