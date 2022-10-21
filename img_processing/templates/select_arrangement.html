@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
+{% load django_bootstrap5 %}
 
 {% block header %}
 <div class="alert alert-dark" role="alert">
    <h3> 画像に写った花の花弁配置を選択してください </h3>
-   {% if before_modification %}
-   <p>修正が必要な場合は[修正 or 確認]を，必要ない場合は[修正せずに次へ]を押してください</p>
-   {% else %}
-   {% endif %}
 </div>
 {% endblock header %}
 
@@ -14,4 +11,73 @@
 <div class="container-fluid">
       <img src='{{ path_img }}' width='{{ width }}' height='{{ height }}' class="img-fluid d-block mx-auto">
 </div>
+<form method="post">
+      {% csrf_token %}
+      <div class="p-5 gap-3">
+            <div class="d-flex mb-5">
+                  <ul class="list-inline mx-auto justify-content-center">
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/A-1.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="A-1">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/A-2.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="A-2">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/A-3.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="A-3">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/B-1.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="B-1">
+
+                              </div>
+                        </li>
+                  </ul>
+            </div>
+            <div class="d-flex">
+                  <ul class="list-inline mx-auto justify-content-center">
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/C-1.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="C-1">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/C-2.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="C-2">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/C-3.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="C-3">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/D-1.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="D-1">
+                              </div>
+                        </li>
+                        <li class="list-inline-item">
+                              <div class="list-group gap-3 mx-3">
+                                    <img src="/media/arrangement/D-2.svg" width="150" height="150">
+                                    <input class="btn btn-outline-primary" type="submit" name="predict" value="D-2">
+                              </div>
+                        </li>
+                  </ul>
+            </div>
+      </div>
+</form>
+
 {% endblock content %}

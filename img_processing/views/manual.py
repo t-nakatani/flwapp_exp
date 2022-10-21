@@ -1,3 +1,4 @@
+import re
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -20,11 +21,16 @@ def arrangement(request, user_id):
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'user': user}
+
         return render(request, 'select_arrangement.html', context)
+
+    if request.method == 'POST':
+        predict = request.POST['predict']
+        return redirect('manual_submit', user_id, predict)
 
 
 @login_required
-def submit(request, user_id):
+def submit(request, user_id, predict):
     """
     GET: 結果の提出前確認
     POST: ImageProcessing.predictとUser.next_img_idを更新
@@ -34,20 +40,26 @@ def submit(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        context = {'path_img': f'/media/estimated/{user.nexting_id}/img.png',
-                   'height': IMG_HEIGHT,
-                   'width': IMG_WIDTH,
-                   'user': user}
+        context = {'path_img': f'/media/estimated/{user.next_img_id}/img.png',
+                   'height': int(IMG_HEIGHT * 1.5),
+                   'width': int(IMG_WIDTH * 1.5),
+                   'predict': predict.replace('-', ''),
+                   'filename': f'{predict}.svg'}
         return render(request, 'manual_submit.html', context)
 
     if request.method == 'POST':
-        predict = ""  # TODO ボタンのvalueから花弁配置のタイプを取得
+        print('request.method == POST')
+        predict = request.POST['predict']
         with transaction.atomic():
+            print('transaction.atomic()')
             processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
             processing.predict = predict
             processing.save()
+            print('processing.save()')
             user.next_img_id += 1
             user.save()
+            print('puser.save()')
+
 
         if user.next_img_id == 20:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．お疲れ様でした．")
