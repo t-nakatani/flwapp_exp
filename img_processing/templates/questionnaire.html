@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
+
+{% if messages %}
+{% block header %}
+{% for message in messages %}
+<div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+    {{ message }}
+</div>
+{% endfor %}
+{% endblock %}
+{% endif %}
+
 {% block content %}
-<div class="text-black text-center bg-white p-3 p-sm-5 rounded">
+<div class="text-black text-center bg-white p-3 p-sm-5">
     <h2>実験後アンケート</h2>
 </div>
 {% if form %}
