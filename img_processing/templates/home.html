@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 
-{% if messages %}
 {% block header %}
+{% if messages %}
 {% for message in messages %}
 <div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
     {{ message }}
 </div>
 {% endfor %}
-<div class="text-white text-center bg-dark p-3 p-sm-5 rounded">
+{% endif %}
+<div class="text-white text-center bg-dark p-3 p-sm-5">
     <h1 class="display-4">Petal Arrangement Estimater</h1>
 </div>
 {% endblock %}
-{% endif %}
 
 {% block content %}
 {% if finished_exp %}
-<div class="text-black text-center bg-white p-3 p-sm-5 rounded">
+<div class="text-black text-center bg-white p-3 p-sm-5">
     <h2>実験は終了です．ご協力ありがとうございました！</h2>
 
 </div>
