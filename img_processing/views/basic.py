@@ -18,7 +18,9 @@ def update_data_dir(user):
 
 def home(request):
     """ホームページ"""
-    if Questionnaire.objects.select_related('user').filter(user=request.user).exists():
+    if request.user.id is None:
+        return render(request, 'home.html')
+    elif Questionnaire.objects.select_related('user').filter(user=request.user).exists():
         return render(request, 'home.html', {'finished_exp': True, 'user_id': request.user.id})
     return render(request, 'home.html', {'user_id': request.user.id})
 
