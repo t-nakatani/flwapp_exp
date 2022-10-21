@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('progress/<int:user_id>/', exp.progress, name='progress'),
     path('select_arrangement/<int:user_id>/', manual.arrangement, name='select_arrangement'),
-    path('submit/manual/<int:user_id>/', manual.submit, name='manual_submit'),
+    path('submit/manual/<int:user_id>/<str:predict>/', manual.submit, name='manual_submit'),
     path('img_corner/<int:user_id>/', use_system.corner, name='img_corner'),
     path('img_lr/<int:user_id>/', use_system.lr, name='img_lr'),
     path('submit/system/<int:user_id>/', use_system.submit, name='use_system_submit'),
