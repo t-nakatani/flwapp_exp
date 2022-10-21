@@ -1,4 +1,3 @@
-import re
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -48,18 +47,13 @@ def submit(request, user_id, predict):
         return render(request, 'manual_submit.html', context)
 
     if request.method == 'POST':
-        print('request.method == POST')
         predict = request.POST['predict']
         with transaction.atomic():
-            print('transaction.atomic()')
             processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
             processing.predict = predict
             processing.save()
-            print('processing.save()')
             user.next_img_id += 1
             user.save()
-            print('puser.save()')
-
 
         if user.next_img_id == 20:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．お疲れ様でした．")
