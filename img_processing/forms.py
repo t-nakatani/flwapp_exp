@@ -16,3 +16,6 @@ class QuestionnaireForm(forms.ModelForm):
             'trouble': '実験中困ったことがあれば教えてください',
             'to_be_improved': '改善点があれば教えてください',
         }
+
+class BugReportForm(forms.Form):
+    text = forms.CharField(label='バグの内容', max_length=100)

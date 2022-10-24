@@ -58,8 +58,7 @@
 			<a class="btn btn-primary" href="{% url 'img_corner' user.id %}" role="button">修正をやり直す</a>
 			<a class="btn btn-primary" href="{% url 'img_lr' user.id %}" role="button">次へ</a>
 			{% endif %}
-			<!-- モーダルボタン(https://www.sejuku.net/blog/78105) -->
-			<a class="btn btn-outline-danger" data-toggle="modal" data-target="#bug_report_modal">不具合の報告</a>
+			<a class="btn btn-outline-danger" href="{% url 'bug_report' user.id %}" role="button">不具合の報告</a>
 			<!-- 修正用のモーダル -->
 			<div class="modal fade" id="fix_corner_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
 				<div class="modal-dialog modal-xl">
@@ -136,19 +135,6 @@
 	</div>
 
 	<!-- モーダルボタンをクリックした後に表示される画面の内容(bug-report) -->
-	<div class="modal fade" id="bug_report_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title" id="myModalLabel">不具合を報告します</h4>
-				</div>
-				<div class="modal-footer">
-					<a class="btn btn-outline-secondary" role="button" data-dismiss="modal">戻る</button>
-					<a class="btn btn-outline-danger" href="{% url 'home' %}?bug-report" role="button">報告</a>
-				</div>
-			</div>
-		</div>
-	</div>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

@@ -57,5 +57,5 @@ def submit(request, user_id, predict):
 
         if user.next_img_id == 20:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
-            return redirect('questionnare', user_id)
+            return redirect('questionnaire', user_id)
         return redirect('progress', user_id)

@@ -2,10 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
-from img_processing.forms import QuestionnaireForm
+from img_processing.forms import QuestionnaireForm, BugReportForm
 from img_processing.models import Image
 from django.views.generic import CreateView
 from django.contrib import messages
+from django.db import transaction
 
 from estimater import estimate
 import shutil
@@ -80,5 +81,39 @@ def questionnaire(request, user_id):
                 questionnaire.save()
             except Exception:
                 messages.add_message(request, messages.ERROR, u"ERROR: 重複してアンケートが送信されました")
-                return redirect('home')
-            return redirect('progress', user_id)
+            return redirect('home')
+
+
+def bug_report(request, user_id):
+    """
+    GET: バグのレポート画面を提供
+    POST: ImageProcessing.predictとUser.next_img_idを更新
+    """
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        form = BugReportForm()
+        context = {'form': form,
+                   'user': request.user}
+        return render(request, 'bug_report.html', context)
+
+    if request.method == 'POST':
+        with transaction.atomic():
+            form = BugReportForm(request.POST)
+            if form.is_valid():
+                text = form.cleaned_data['text']
+                with open('bug_report.txt', mode='a') as f:
+                    f.write(f'user: {user.username}(id={user.id}), img_id: {user.next_img_id}, text: {text}\n')
+            shutil.move(
+                f'media/processing_data/user_{user.id}',
+                f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
+            )
+            user.next_img_id += 1
+            user.save()
+
+        if user.next_img_id == 20:
+            messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
+            return redirect('questionnaire', user_id)
+        return redirect('progress', user_id)

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+<div class="alert alert-dark" role="alert">
+    <h5> バグの報告 </h5>
+    <p>バグを報告します</p>
+ </div>
+ <div class="p-5 w-75 mx-auto">
+    <form action="{% url 'bug_report' user.id %}" method="post">
+        {% csrf_token %}
+        <div class="pt-3">{% bootstrap_form form %}</div>
+        <div class="d-grid gap-2 col-5 mx-auto mt-5">
+            <a class="btn btn-outline-secondary" href="{% url 'progress' user.id %}" role="button">stop reporting bug</a>
+            <button type="submit" class="btn btn-danger">report bug</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

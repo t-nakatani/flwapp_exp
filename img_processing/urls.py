@@ -15,5 +15,6 @@ urlpatterns = [
     path('img_corner/<int:user_id>/', use_system.corner, name='img_corner'),
     path('img_lr/<int:user_id>/', use_system.lr, name='img_lr'),
     path('submit/system/<int:user_id>/', use_system.submit, name='use_system_submit'),
+    path('bug_report/<int:user_id>/', exp.bug_report, name='bug_report'),
     path('questionnaire/<int:user_id>/', exp.questionnaire, name='questionnaire'),
 ]
