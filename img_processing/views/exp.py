@@ -80,5 +80,4 @@ def questionnaire(request, user_id):
                 questionnaire.save()
             except Exception:
                 messages.add_message(request, messages.ERROR, u"ERROR: 重複してアンケートが送信されました")
-                return redirect('home')
-            return redirect('progress', user_id)
+            return redirect('home')
