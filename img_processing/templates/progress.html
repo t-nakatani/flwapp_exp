@@ -9,12 +9,17 @@
 <div class="text-black text-center bg-white p-3 p-sm-5">
     <h2>{{ user.next_img_id }} out of a total of 20 images have been completed</h2>
 </div>
-
+{% if percentage_completed == '100%' %}
+<div class="d-grid gap-2 col-5 mx-auto mt-2">
+    <a href="{% url 'questionnaire' user.id %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">アンケートにご協力ください</a>
+</div>
+{% else %}
 <form action="{% url 'progress' user.id %}" method="post">
     {% csrf_token %}
     <div class="d-grid gap-2 col-5 mx-auto mt-2">
         <button type="submit" class="submit btn btn-primary">next image</button>
     </div>
 </form>
+{% endif %}
 {% endblock content %}
 
