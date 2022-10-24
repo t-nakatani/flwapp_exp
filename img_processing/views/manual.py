@@ -16,7 +16,7 @@ def arrangement(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        context = {'path_img': f'/media/estimated/{user.next_img_id}/img.png',
+        context = {'path_img': f'/media/estimated/{user.next_img_id}/img_bb.png',
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'user': user}
@@ -39,7 +39,7 @@ def submit(request, user_id, predict):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        context = {'path_img': f'/media/estimated/{user.next_img_id}/img.png',
+        context = {'path_img': f'/media/estimated/{user.next_img_id}/img_bb.png',
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'predict': predict.replace('-', ''),
