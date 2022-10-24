@@ -8,7 +8,7 @@ services:
     volumes:
       - .:/work
       - gunicorn:/var/run/gunicorn
-    # env_file: docker.env
+      - ./media:/work/media
   nginx:
     image: nginx:1.17.7
     container_name: nginx
@@ -19,6 +19,7 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d
       - gunicorn:/var/run/gunicorn
+      - ./media:/work/media
 volumes:
   gunicorn:
     driver: local

@@ -31,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'gunicorn-django']
-CSRF_TRUSTED_ORIGINS = ['https://flwapp.imlab.jp']
+CSRF_TRUSTED_ORIGINS = ['https://flwapp.imlab.jp', 'http://localhost:9001']
 
 # Application definition
 
@@ -124,13 +124,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-# if DEBUG:
+STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_ROOT = BASE_DIR / 'media'
-# else:
-# MEDIA_ROOT = f'/var/www/{BASE_DIR.name}/media'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
