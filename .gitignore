@@ -138,5 +138,5 @@ estimater/yolov5/exp21_best.pt
 .env
 
 img_processing/templates/note.html
-
+bug_report.txt
 
