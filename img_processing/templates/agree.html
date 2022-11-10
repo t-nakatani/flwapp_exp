@@ -16,8 +16,16 @@
     
 </div>
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
-    <a href="{% url 'signup' %}" class="btn btn-primary" tabindex="-1" role="button" aria-disabled="true">承諾して次へ</a>
+    <a href="" class="btn btn-primary" tabindex="-1" download="flwapp_agreement.pdf" role="button" id="agree" onclick="clicked()">承諾する</a>
+    <a href="{% url 'signup' %}" class="btn btn-primary" tabindex="-1" role="button" id="next_btn" aria-disabled="true">次へ</a>
 </div>
+<script>
+    document.getElementById("next_btn").style.display = "none";
+    function clicked(){
+        document.getElementById("next_btn").style.display = "block";
+        document.getElementById("agree").style.display = "none";
+    }
+</script>
 <br>
 <br>
 {% endblock content %}
