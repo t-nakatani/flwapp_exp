@@ -14,6 +14,7 @@ class ImageProcessing(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     img_id = models.IntegerField(default=0)
+    use_system = models.BooleanField(default=True)
     predict = models.CharField(max_length=12, default="")
     start_time = models.DateTimeField(auto_now_add=True)  # 登録時に現在時刻で更新
     end_time = models.DateTimeField(auto_now=True)  # 登録時と更新時に現在時刻で更新

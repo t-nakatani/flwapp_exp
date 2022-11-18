@@ -40,7 +40,7 @@ def progress(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        percentage_completed = f'{request.user.next_img_id * 5}%'
+        percentage_completed = f'{request.user.num_finished_img * 5}%'
         context = {'percentage_completed': percentage_completed,
                    'user': request.user}
         return render(request, 'progress.html', context)

@@ -130,10 +130,10 @@ def submit(request, user_id):
                 f'media/processing_data/user_{user.id}',
                 f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
             )
-            user.next_img_id += 1
+            user.set_next_img_id()
             user.save()
 
-        if user.next_img_id == 20:
+        if user.num_finised_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
