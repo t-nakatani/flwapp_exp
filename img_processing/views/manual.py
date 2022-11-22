@@ -52,10 +52,10 @@ def submit(request, user_id, predict):
             processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
             processing.predict = predict
             processing.save()
-            user.next_img_id += 1
+            user.set_next_img_id()
             user.save()
 
-        if user.next_img_id == 20:
+        if user.num_finished_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
