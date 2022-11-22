@@ -40,7 +40,7 @@ def progress(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        percentage_completed = f'{request.user.num_finished_img * 5}%'
+        percentage_completed = f'{int(request.user.num_finished_img * 3.3) + 1}%'
         context = {'percentage_completed': percentage_completed,
                    'user': request.user}
         return render(request, 'progress.html', context)
@@ -68,14 +68,15 @@ def questionnaire(request, user_id):
 
     if request.method == 'GET':
         form = QuestionnaireForm()
-        context = {'form': form, '1to5': [1, 2, 3, 4, 5]}
+        labels = ['1: 使いにくかった', '2: やや使いにくかった', '3: 同程度であった', '4: やや使いやすかった', '5: 使いやすかった']
+        context = {'form': form, 'labels': labels}
         return render(request, 'questionnaire.html', context)
 
     if request.method == 'POST':
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
             questionnaire = form.save(commit=False)
-            questionnaire.usability = request.POST["radio_options"]
+            questionnaire.system_usability = request.POST["system_usability"][0]
             questionnaire.user = user
             try:
                 questionnaire.save()

@@ -23,6 +23,6 @@ class ImageProcessing(models.Model):
 class Questionnaire(models.Model):
     """実験後アンケートのためのモデル"""
     user = models.OneToOneField(User, on_delete=models.PROTECT)
-    usability = models.IntegerField(default=0)
+    system_usability = models.IntegerField(default=0)
     trouble = models.TextField(default='')
     to_be_improved = models.TextField(default='')
