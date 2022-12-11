@@ -43,10 +43,16 @@ def submit(request, user_id, predict):
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'predict': predict.replace('-', ''),
-                   'filename': f'{predict}.svg'}
+                   'filename': f'{predict}.svg',
+                   'trial': not request.user.trial_finished}
         return render(request, 'manual_submit.html', context)
 
     if request.method == 'POST':
+        if not user.trial_finished:
+            user.trial_finished = True
+            user.save()
+            return redirect('trial', user_id)
+
         predict = request.POST['predict']
         with transaction.atomic():
             processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)

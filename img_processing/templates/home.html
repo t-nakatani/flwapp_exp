@@ -3,7 +3,7 @@
 {% block header %}
 {% if messages %}
 {% for message in messages %}
-<div {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+<div class="{{ message.tags }}">
     {{ message }}
 </div>
 {% endfor %}
@@ -21,7 +21,9 @@
 </div>
 {% elif user_id %}
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
-    <a href="{% url 'progress' user_id %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">next</a>
+    <a href="{% url 'trial' user_id %}" class="btn btn-outline-primary" tabindex="-1" role="button" aria-disabled="true">操作方法の確認</a>
+    <a href="{% url 'progress' user_id %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">実験に進む</a>
+    
 </div>
 {% else %}
 <div class="d-grid gap-2 col-5 mx-auto mt-2">

@@ -18,6 +18,7 @@ class User(AbstractUser):
     use_system = models.BooleanField(default=True)
     char_img_ids = models.CharField(max_length=80, default=init_img_list())  # ','区切りのstrで保持
     num_finished_img = models.IntegerField(default=0)
+    trial_finished = models.BooleanField(default=False)  # 操作方法の確認が終わっているか
 
     def __str__(self):
         return self.username
