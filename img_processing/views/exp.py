@@ -52,6 +52,10 @@ def progress(request, user_id):
         processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
         processing.save()
 
+        if not user.trial_finished:
+            user.trial_finished = True
+            user.save()
+
         if user.use_system:
             return redirect('img_corner', user_id)
         else:
@@ -118,3 +122,28 @@ def bug_report(request, user_id):
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
+
+@login_required
+def trial_env(request, user_id):
+    """
+    system利用環境の操作手順確認用
+    """
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        if not os.path.exists(f'media/processing_data/user_{user.id}'):
+            shutil.copytree('media/trial/sample', f'media/processing_data/user_{user.id}')
+        context = {}
+        return render(request, 'trial_home.html', context)
+
+    if request.method == 'POST':
+        if user.trial_finished:
+            user.trial_finished = False
+            user.save()
+
+        if 'system' in request.POST:
+            return redirect('img_corner', user_id)
+        else:  # manual
+            return redirect('select_arrangement', user_id)
