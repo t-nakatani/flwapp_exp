@@ -117,23 +117,32 @@ def submit(request, user_id):
         context = {'path_img_lr': cache_busting(f'/media/processing_data/user_{user.id}/img_lr.png'),
                    'height': IMG_HEIGHT,
                    'width': IMG_WIDTH,
-                   'user': request.user}
+                   'user': request.user,
+                   'trial': not request.user.trial_finished}
         return render(request, 'use_system_submit.html', context)
 
     if request.method == 'POST':
+        if not user.trial_finished:
+            user.trial_finished = True
+            user.save()
+            return redirect('trial', user_id)
+
         predict = estimate.get_predict_from_csv(f'media/processing_data/user_{user.id}/df_n.csv')
         with transaction.atomic():
-            processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
             processing.predict = predict
             processing.save()
             shutil.move(
                 f'media/processing_data/user_{user.id}',
                 f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
             )
-            user.next_img_id += 1
+            user.set_next_img_id()
             user.save()
 
-        if user.next_img_id == 20:
+        if user.num_finished_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)

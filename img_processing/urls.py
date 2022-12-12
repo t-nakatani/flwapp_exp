@@ -9,6 +9,9 @@ urlpatterns = [
     path('note/', basic.note, name='note'),
     path('agree/', basic.agree, name='agree'),
 
+    # 動作確認用の試用環境
+    path('trial/<int:user_id>/', exp.trial_env, name='trial'),
+
     path('progress/<int:user_id>/', exp.progress, name='progress'),
     path('select_arrangement/<int:user_id>/', manual.arrangement, name='select_arrangement'),
     path('submit/manual/<int:user_id>/<str:predict>/', manual.submit, name='manual_submit'),

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="alert alert-dark" role="alert">
+    <h2>ここで操作方法の確認を行なってください</h2>
+</div>
+{% endblock header %}
+
+{% block content %}
+<form action="{% url 'trial' user.id %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="d-grid gap-2 col-5 mx-auto mt-4">
+            <img class='d-block mx-auto' src='/media/trial/system.png' width='600'>
+            <button type="submit" class="submit btn btn-primary" name="system">システムを利用した実験環境</button>
+        </div>
+        <div class="d-grid gap-2 col-5 mx-auto mt-4">
+            <img class='d-block mx-auto' src='/media/trial/manual.png' width='600'>
+            <button type="submit" class="submit btn btn-primary" name="manual">システムを利用しない実験環境</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

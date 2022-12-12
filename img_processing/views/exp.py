@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from img_processing.forms import QuestionnaireForm, BugReportForm
 from img_processing.models import Image
 from django.views.generic import CreateView
@@ -40,7 +40,7 @@ def progress(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        percentage_completed = f'{request.user.next_img_id * 5}%'
+        percentage_completed = f'{int(request.user.num_finished_img * 3.3) + 1}%'
         context = {'percentage_completed': percentage_completed,
                    'user': request.user}
         return render(request, 'progress.html', context)
@@ -49,8 +49,16 @@ def progress(request, user_id):
         if user.use_system:
             if not os.path.exists(f'media/processing_data/user_{user.id}'):
                 shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
-        processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
+        processing, _ = ImageProcessing.objects.get_or_create(user=user,
+                                                                    img_id=user.next_img_id,
+                                                                    use_system=user.use_system)
+
+        processing.use_system = user.use_system
         processing.save()
+
+        if not user.trial_finished:
+            user.trial_finished = True
+            user.save()
 
         if user.use_system:
             return redirect('img_corner', user_id)
@@ -68,14 +76,15 @@ def questionnaire(request, user_id):
 
     if request.method == 'GET':
         form = QuestionnaireForm()
-        context = {'form': form, '1to5': [1, 2, 3, 4, 5]}
+        labels = ['1: 使いにくかった', '2: やや使いにくかった', '3: 同程度であった', '4: やや使いやすかった', '5: 使いやすかった']
+        context = {'form': form, 'labels': labels}
         return render(request, 'questionnaire.html', context)
 
     if request.method == 'POST':
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
             questionnaire = form.save(commit=False)
-            questionnaire.usability = request.POST["radio_options"]
+            questionnaire.system_usability = request.POST["system_usability"][0]
             questionnaire.user = user
             try:
                 questionnaire.save()
@@ -106,14 +115,46 @@ def bug_report(request, user_id):
                 text = form.cleaned_data['text']
                 with open('bug_report.txt', mode='a') as f:
                     f.write(f'user: {user.username}(id={user.id}), img_id: {user.next_img_id}, text: {text}\n')
+
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
+            processing.predict = ''
+            processing.save()
             shutil.move(
                 f'media/processing_data/user_{user.id}',
                 f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
             )
-            user.next_img_id += 1
+            user.set_next_img_id()
             user.save()
 
-        if user.next_img_id == 20:
+        if user.num_finished_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
+
+@login_required
+def trial_env(request, user_id):
+    """
+    system利用環境の操作手順確認用
+    """
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        if not os.path.exists(f'media/processing_data/user_{user.id}'):
+            shutil.copytree('media/trial/sample', f'media/processing_data/user_{user.id}')
+        context = {}
+        return render(request, 'trial_home.html', context)
+
+    if request.method == 'POST':
+        if user.trial_finished:
+            user.trial_finished = False
+            user.save()
+
+        if 'system' in request.POST:
+            return redirect('img_corner', user_id)
+        else:  # manual
+            return redirect('select_arrangement', user_id)

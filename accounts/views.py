@@ -14,8 +14,13 @@ class SignUpView(CreateView):
     template_name = 'signup.html'
 
     def form_valid(self, form):
+        """
+        ユーザー作成時のform_valid
+        use_systemは2の剰余で決定
+        """
         user = form.save()
         user.use_system = user.id % 2
+        user.set_next_img_id(finished=False)
         user.save()
         login(self.request, user)
         return redirect('login')
