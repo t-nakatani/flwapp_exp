@@ -55,7 +55,10 @@ def submit(request, user_id, predict):
 
         predict = request.POST['predict']
         with transaction.atomic():
-            processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
             processing.predict = predict
             processing.save()
             user.set_next_img_id()

@@ -6,7 +6,7 @@ import random
 
 def init_img_list():
     """img_idsのlistをcharで保持"""
-    return ','.join([str(i) for i in range(30)])
+    return ','.join([str(i) for i in range(15)])
 
 
 # Create your models here.
@@ -31,13 +31,18 @@ class User(AbstractUser):
         if finished:
             num_finished_imgとuse_systemを更新
         """
+        if finished:
+            self.num_finished_img += 1
+            if self.num_finished_img == 15:
+                self.use_system = not self.use_system
+                self.char_img_ids = init_img_list()
+            if self.num_finished_img == 30:
+                return
+
         list_img_ids = (self.char_img_ids).split(',')
         sampled_id = random.choice(list_img_ids)
 
         self.next_img_id = int(sampled_id)
         list_img_ids.remove(sampled_id)
         self.char_img_ids = ','.join(list_img_ids)
-        if finished:
-            self.num_finished_img += 1
-            if self.num_finished_img == 15:
-                self.use_system = not self.use_system
+        return
