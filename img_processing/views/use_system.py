@@ -129,7 +129,10 @@ def submit(request, user_id):
 
         predict = estimate.get_predict_from_csv(f'media/processing_data/user_{user.id}/df_n.csv')
         with transaction.atomic():
-            processing = get_object_or_404(ImageProcessing, user=user, img_id=user.next_img_id)
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
             processing.predict = predict
             processing.save()
             shutil.move(

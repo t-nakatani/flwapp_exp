@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from img_processing.forms import QuestionnaireForm, BugReportForm
 from img_processing.models import Image
 from django.views.generic import CreateView
@@ -49,7 +49,11 @@ def progress(request, user_id):
         if user.use_system:
             if not os.path.exists(f'media/processing_data/user_{user.id}'):
                 shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
-        processing, _ = ImageProcessing.objects.get_or_create(user=user, img_id=user.next_img_id)
+        processing, _ = ImageProcessing.objects.get_or_create(user=user,
+                                                                    img_id=user.next_img_id,
+                                                                    use_system=user.use_system)
+
+        processing.use_system = user.use_system
         processing.save()
 
         if not user.trial_finished:
@@ -111,14 +115,21 @@ def bug_report(request, user_id):
                 text = form.cleaned_data['text']
                 with open('bug_report.txt', mode='a') as f:
                     f.write(f'user: {user.username}(id={user.id}), img_id: {user.next_img_id}, text: {text}\n')
+
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
+            processing.predict = ''
+            processing.save()
             shutil.move(
                 f'media/processing_data/user_{user.id}',
                 f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}'
             )
-            user.next_img_id += 1
+            user.set_next_img_id()
             user.save()
 
-        if user.next_img_id == 20:
+        if user.num_finished_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
