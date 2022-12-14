@@ -47,11 +47,12 @@ def progress(request, user_id):
 
     if request.method == 'POST':
         if user.use_system:
-            if not os.path.exists(f'media/processing_data/user_{user.id}'):
-                shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
+            if os.path.exists(f'media/processing_data/user_{user.id}'):
+                shutil.rmtree(f'media/processing_data/user_{user.id}')
+            shutil.copytree(f'media/estimated/{user.next_img_id}', f'media/processing_data/user_{user.id}')
         processing, _ = ImageProcessing.objects.get_or_create(user=user,
-                                                                    img_id=user.next_img_id,
-                                                                    use_system=user.use_system)
+                                                              img_id=user.next_img_id,
+                                                              use_system=user.use_system)
 
         processing.use_system = user.use_system
         processing.save()
@@ -144,10 +145,7 @@ def trial_env(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        if not os.path.exists(f'media/processing_data/user_{user.id}'):
-            shutil.copytree('media/trial/sample', f'media/processing_data/user_{user.id}')
-        context = {}
-        return render(request, 'trial_home.html', context)
+        return render(request, 'trial_home.html')
 
     if request.method == 'POST':
         if user.trial_finished:
@@ -155,6 +153,9 @@ def trial_env(request, user_id):
             user.save()
 
         if 'system' in request.POST:
+            if os.path.exists(f'media/processing_data/user_{user.id}'):
+                shutil.rmtree(f'media/processing_data/user_{user.id}')
+            shutil.copytree('media/trial/sample', f'media/processing_data/user_{user.id}')
             return redirect('img_corner', user_id)
         else:  # manual
             return redirect('select_arrangement', user_id)

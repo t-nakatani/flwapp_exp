@@ -124,6 +124,7 @@ def submit(request, user_id):
     if request.method == 'POST':
         if not user.trial_finished:
             user.trial_finished = True
+            shutil.rmtree(f'media/processing_data/user_{user.id}')
             user.save()
             return redirect('trial', user_id)
 
