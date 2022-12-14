@@ -43,7 +43,11 @@ def submit(request, user_id, predict):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        context = {'path_img': f'/media/estimated/{user.next_img_id}/img_bb.png',
+        if user.trial_finished:
+            path_img = f'/media/estimated/{user.next_img_id}/img_bb.png'
+        else:
+            path_img = '/media/trial/sample/img_bb.png'
+        context = {'path_img': path_img,
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'predict': predict.replace('-', ''),
