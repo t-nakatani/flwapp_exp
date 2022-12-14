@@ -14,14 +14,12 @@
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
     <a class="btn btn-outline-primary" href="{% url 'img_lr' user.id %}" role="button">戻る</a>
 </div>
-{% if trial %}
-<div class="d-grid gap-2 col-5 mx-auto mt-2">
-    <a href="{% url 'trial' user.id %}" class="btn btn-primary  " tabindex="-1" role="button" aria-disabled="true">確認終了</a>
-</div>
-{% else %}
 <form action="{% url 'use_system_submit' user.id %}" method="post">
     {% csrf_token %}
     <div class="d-grid gap-2 col-5 mx-auto mt-2">
+        {% if trial %}
+        <button type="submit" class="submit btn btn-primary">確認終了</button>
+        {% else %}
         <button type="submit" class="submit btn btn-primary">submit</button>
     </div>
 </form>
