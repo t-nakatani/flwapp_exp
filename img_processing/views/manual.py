@@ -16,11 +16,7 @@ def arrangement(request, user_id):
         return HttpResponseForbidden('You cannot access this page')
 
     if request.method == 'GET':
-        if user.trial_finished:
-            path_img = f'/media/estimated/{user.next_img_id}/img_bb.png'
-        else:
-            path_img = '/media/trial/sample/img_bb.png'
-        context = {'path_img': path_img,
+        context = {'path_img': f'/media/estimated/{user.next_img_id}/img_bb.png',
                    'height': int(IMG_HEIGHT * 1.5),
                    'width': int(IMG_WIDTH * 1.5),
                    'user': user}
