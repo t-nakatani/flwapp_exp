@@ -2,7 +2,7 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-{% if request.META.HTTP_REFERER == 'http://localhost:9001/agree/' or request.META.HTTP_REFERER == 'https://flwapp.imlab.jp/agree/' %}
+{% if request.META.HTTP_REFERER == 'http://localhost:9001/agree/' or request.META.HTTP_REFERER == 'https://flwapp.imlab.jp/agree/' or request.META.HTTP_REFERER == 'https://flwapp.imlab.jp/signup/'%}
     <h1>User Registration</h1>
     <form action="{% url 'signup' %}" method="post">
     {% csrf_token %}
