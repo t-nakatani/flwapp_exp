@@ -130,10 +130,39 @@ def bug_report(request, user_id):
             user.set_next_img_id()
             user.save()
 
+
+def bug_report_for_exp(request, user_id):
+    """
+    GET: バグのレポート画面を提供
+    POST: ImageProcessing.predictとUser.next_img_idを更新
+    """
+    user = request.user
+    if user.id != user_id:
+        return HttpResponseForbidden('You cannot access this page')
+
+    if request.method == 'GET':
+        return render(request, 'bug_report.html')
+
+    if request.method == 'POST':
+        if not user.trial_finished:
+            return redirect('trial', user_id)
+        with transaction.atomic():
+            processing = get_object_or_404(ImageProcessing,
+                                           user=user,
+                                           img_id=user.next_img_id,
+                                           use_system=user.use_system)
+            processing.predict = ''
+            processing.save()
+            shutil.move(f'media/processing_data/user_{user.id}',
+                        f'media/processing_data_log/user_{user.id}_img_{user.next_img_id}')
+            user.set_next_img_id()
+            user.save()
+
         if user.num_finished_img == 30:
             messages.add_message(request, messages.SUCCESS, u"実験は終了です．アンケートにご協力ください．")
             return redirect('questionnaire', user_id)
         return redirect('progress', user_id)
+
 
 @login_required
 def trial_env(request, user_id):
