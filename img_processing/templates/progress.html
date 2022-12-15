@@ -7,7 +7,13 @@
     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="20" style="width: {{ percentage_completed }}"></div>
 </div>
 <div class="text-black text-center bg-white p-3 p-sm-5">
-    <h2>{{ user.num_finished_img }} out of a total of 30 images have been completed</h2>
+    <h2>全画像30枚のうち、{{ user.num_finished_img }}枚の推定が完了しています</h2>
+    <br>
+    {% if user.use_system %}
+    <h2>次は「提案システムを用いた推定」です</h2>
+    {% else %}
+    <h2>次は「提案システムを用いない、手作業での推定」です</h2>
+    {% endif %}
 </div>
 {% if percentage_completed == '100%' %}
 <div class="d-grid gap-2 col-5 mx-auto mt-2">
@@ -17,7 +23,7 @@
 <form action="{% url 'progress' user.id %}" method="post">
     {% csrf_token %}
     <div class="d-grid gap-2 col-5 mx-auto mt-2">
-        <button type="submit" class="submit btn btn-primary">next image</button>
+        <button type="submit" class="submit btn btn-primary">次の画像へ</button>
     </div>
 </form>
 {% endif %}
