@@ -312,17 +312,17 @@ def extract_corners_and_create_patches(img, mask, path_img):
     df_synthe.columns = ['pname', 'fname', 'lr']
     return df_natural, df_synthe
 
-def petal_array(dic_, df_):
-    patchs = df_['patch_name']
-    coords = [(x, y) for x, y in zip(df_['cx'], df_['cy'])]
-    cxcy = (int(sum(df_['cx']) / len(df_['cx'])), int(sum(df_['cy']) / len(df_['cy'])))
+def petal_array(dic, df):
+    """this func returns clockwise lr array(str)"""
+    patchs = df.patch_name
+    coords = [(x, y) for x, y in zip(df.cx, df.cy)]
+    cxcy = (int(sum(df.cx) / len(df.cx)), int(sum(df.cy) / len(df.cy)))
     coords_ = [(xy[0] - cxcy[0], xy[1] - cxcy[1]) for xy in coords]
     list_ = sorted([[math.degrees(math.atan2(xy[1], xy[0])), pname] for xy, pname in zip(coords_, patchs)])
-    preds = ''.join([str(dic_[_pnames[1]]) for _pnames in list_])
-    preds = preds.replace('0', 'r').replace('1', 'l')
-    preds = preds[::-1]  # countour clockwise >> clockwise
+    array_lr_clockwise = ''.join([str(dic[_pnames[1]]) for _pnames in list_])
+    array_lr_clockwise = array_lr_clockwise.replace('0', 'r').replace('1', 'l')
 
-    return preds
+    return array_lr_clockwise
 
 def create_img_lr(img_lr, df):
     R = cv2.imread('media/util_data/R.png')
@@ -408,7 +408,7 @@ def arr2TYPE(path_flw_dic, arr, cost):
                 min_ = dist
             elif dist == min_:
                 types.append(type_)
-    arr_ = arr[::-1]
+    arr_ = arr[::-1]  # clockwise >> counter clockwise
     for i, type_ in enumerate(TYPE):
         arr1 = dic[type_]
         for j in range(len(arr_)):
